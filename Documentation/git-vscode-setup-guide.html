@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Git & VS Code Setup Guide — My AI Voyage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@300;400;500&family=Literata:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --cream: #f5f1ea;
+      --gold: #c9a84c;
+      --gold-light: #e8d5a3;
+      --slate: #2c3e50;
+      --muted: #7a7065;
+      --rule: #d4cfc5;
+      --accent: #1a3a5c;
+      --white: #fdfcf9;
+      --success: #2d6a4f;
+      --warning: #7a5a1a;
+      --code-bg: #1e2a38;
+      --code-text: #a8d8a8;
+      --shell-prompt: #c9a84c;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Literata', Georgia, serif;
+      font-weight: 300;
+      line-height: 1.75;
+      padding-bottom: 4rem;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      background: var(--accent);
+      color: var(--cream);
+      padding: 2rem clamp(1.5rem, 6vw, 5rem);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .header-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 0.3rem;
+    }
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 900;
+      line-height: 1.15;
+    }
+    .header-subtitle {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(245,241,234,0.6);
+      margin-top: 0.5rem;
+    }
+    .header-badge {
+      background: var(--gold);
+      color: var(--accent);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.4em 0.9em;
+      align-self: flex-start;
+      margin-top: 0.3rem;
+    }
+
+    /* ── PROGRESS NAV ── */
+    .progress-nav {
+      background: var(--white);
+      border-bottom: 2px solid var(--ink);
+      padding: 1.2rem clamp(1.5rem, 6vw, 5rem);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+    }
+    .nav-step {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0 0.8rem;
+      transition: color 0.2s;
+    }
+    .nav-step:first-child { padding-left: 0; }
+    .nav-step:hover { color: var(--accent); }
+    .nav-step .num {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid currentColor;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      flex-shrink: 0;
+    }
+    .nav-arrow {
+      color: var(--rule);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 6vw, 3rem);
+    }
+
+    /* ── INTRO BOX ── */
+    .intro-box {
+      background: var(--white);
+      border-left: 4px solid var(--gold);
+      padding: 2rem 2.5rem;
+      margin: 3rem 0 2.5rem;
+    }
+    .intro-box h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+    }
+    .intro-box p {
+      font-size: 0.95rem;
+      color: #3a3530;
+      line-height: 1.75;
+    }
+    .intro-box p + p { margin-top: 0.8rem; }
+
+    /* ── WHAT YOU'LL HAVE ── */
+    .outcome-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--rule);
+      margin-bottom: 3rem;
+    }
+    .outcome-card {
+      background: var(--white);
+      padding: 1.5rem;
+    }
+    .outcome-icon { font-size: 1.5rem; margin-bottom: 0.6rem; }
+    .outcome-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .outcome-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── SECTION HEADERS ── */
+    .section-wrap {
+      margin-bottom: 3.5rem;
+      scroll-margin-top: 70px;
+    }
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section-label::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: var(--gold);
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      line-height: 1.2;
+    }
+    .section-desc {
+      font-size: 0.92rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 2rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* ── STEPS ── */
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      align-items: start;
+    }
+    .step-num {
+      width: 48px;
+      height: 48px;
+      background: var(--accent);
+      color: var(--gold-light);
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-body {}
+    .step-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .step-text {
+      font-size: 0.92rem;
+      color: #3a3530;
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+    .step-text + .step-text { margin-top: -0.3rem; }
+
+    /* ── CODE BLOCKS ── */
+    .code-block {
+      background: var(--code-bg);
+      border-radius: 4px;
+      margin: 1rem 0;
+      overflow: hidden;
+    }
+    .code-header {
+      background: rgba(255,255,255,0.07);
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .code-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+    .code-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: none;
+      border: none;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .code-copy:hover { opacity: 1; }
+    pre {
+      padding: 1.2rem 1.5rem;
+      overflow-x: auto;
+      line-height: 1.65;
+    }
+    code {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--code-text);
+    }
+    .prompt { color: var(--shell-prompt); }
+    .comment { color: rgba(255,255,255,0.3); font-style: italic; }
+    .highlight { color: #ffd700; }
+    .inline-code {
+      background: rgba(26,58,92,0.12);
+      color: var(--accent);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.82em;
+      padding: 0.15em 0.45em;
+      border-radius: 3px;
+    }
+
+    /* ── CALLOUTS ── */
+    .callout {
+      display: flex;
+      gap: 1rem;
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0;
+      border-radius: 2px;
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+    .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout.tip { background: rgba(45,106,79,0.08); border-left: 3px solid var(--success); }
+    .callout.tip .callout-icon::before { content: '💡'; }
+    .callout.warn { background: rgba(122,90,26,0.08); border-left: 3px solid var(--warning); }
+    .callout.warn .callout-icon::before { content: '⚠️'; }
+    .callout.info { background: rgba(26,58,92,0.06); border-left: 3px solid var(--accent); }
+    .callout.info .callout-icon::before { content: 'ℹ️'; }
+
+    /* ── FILE TREE ── */
+    .file-tree {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 4px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.82rem;
+      color: #cdd6e0;
+      line-height: 2;
+      margin: 1rem 0;
+    }
+    .tree-folder { color: var(--gold); }
+    .tree-file { color: #a8d8a8; }
+    .tree-special { color: #ffd700; }
+    .tree-desc { color: rgba(255,255,255,0.3); font-style: italic; font-size: 0.75rem; }
+
+    /* ── KEYBOARD SHORTCUTS ── */
+    kbd {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-bottom: 2px solid #bbb;
+      border-radius: 4px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      padding: 0.15em 0.5em;
+      color: var(--slate);
+      box-shadow: 0 1px 0 #ccc;
+    }
+
+    /* ── VS CODE SPECIFIC ── */
+    .vscode-panel {
+      background: #1e1e1e;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    .vscode-titlebar {
+      background: #3c3c3c;
+      padding: 0.4rem 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.6);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .vscode-titlebar::before {
+      content: '● ● ●';
+      color: rgba(255,255,255,0.2);
+      font-size: 0.6rem;
+      margin-right: 0.5rem;
+    }
+    .vscode-body {
+      padding: 1.2rem 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      line-height: 1.8;
+    }
+    .vscode-menu { color: #9cdcfe; }
+    .vscode-action { color: #4ec9b0; }
+    .vscode-path { color: #ce9178; }
+    .vscode-key { color: #ffd700; }
+
+    /* ── GIT WORKFLOW DIAGRAM ── */
+    .workflow-diagram {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      padding: 2rem;
+      margin: 1.5rem 0;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      overflow-x: auto;
+    }
+    .flow-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 0.4rem 0;
+    }
+    .flow-box {
+      background: var(--accent);
+      color: var(--cream);
+      padding: 0.4em 0.9em;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+    .flow-box.github { background: #24292e; }
+    .flow-box.local { background: var(--success); }
+    .flow-box.staged { background: var(--warning); color: var(--cream); }
+    .flow-arrow {
+      padding: 0 0.5rem;
+      color: var(--gold);
+      font-size: 1rem;
+    }
+    .flow-label {
+      font-size: 0.65rem;
+      color: var(--muted);
+      font-style: italic;
+      padding-left: 1rem;
+    }
+
+    /* ── CHECKLIST ── */
+    .checklist {
+      list-style: none;
+      margin: 1rem 0;
+    }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--rule);
+      font-size: 0.9rem;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .check-box {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid var(--rule);
+      border-radius: 3px;
+      flex-shrink: 0;
+      margin-top: 0.2rem;
+    }
+
+    /* ── SUMMARY TABLE ── */
+    .cmd-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0;
+      font-size: 0.87rem;
+    }
+    .cmd-table th {
+      background: var(--accent);
+      color: var(--gold-light);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-align: left;
+      padding: 0.7rem 1rem;
+    }
+    .cmd-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--rule);
+      vertical-align: top;
+    }
+    .cmd-table tr:last-child td { border-bottom: none; }
+    .cmd-table tr:hover td { background: rgba(26,58,92,0.04); }
+    .cmd-table td:first-child {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .cmd-table td:last-child { color: var(--muted); font-style: italic; font-size: 0.85rem; }
+
+    /* ── EXTENSIONS GRID ── */
+    .ext-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--rule);
+      margin: 1rem 0;
+    }
+    .ext-card {
+      background: var(--white);
+      padding: 1.2rem 1.5rem;
+    }
+    .ext-name {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+    .ext-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+    .ext-required {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--accent);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.1em 0.5em;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── FOOTER ── */
+    .guide-footer {
+      border-top: 2px solid var(--ink);
+      padding: 2rem 0 0;
+      margin-top: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .guide-footer-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    .guide-footer-mono {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    @media (max-width: 700px) {
+      .outcome-grid { grid-template-columns: 1fr; }
+      .ext-grid { grid-template-columns: 1fr; }
+      .step { grid-template-columns: 36px 1fr; }
+      .step-num { width: 36px; height: 36px; font-size: 1rem; }
+      .progress-nav { gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div>
+    <div class="header-brand">My AI Voyage · Setup Guide</div>
+    <h1 class="header-title">Git Version Control &<br>VS Code Setup</h1>
+    <div class="header-subtitle">For MatthijsKoen / My-AI-Voyage · GitHub Pages</div>
+  </div>
+  <div class="header-badge">Citizen Dev Series</div>
+</header>
+
+<!-- STICKY PROGRESS NAV -->
+<nav class="progress-nav">
+  <a class="nav-step" href="#prerequisites"><span class="num">1</span> Prerequisites</a>
+  <span class="nav-arrow">›</span>
+  <a class="nav-step" href="#git-setup"><span class="num">2</span> Git Config</a>
+  <span class="nav-arrow">›</span>
+  <a class="nav-step" href="#connect"><span class="num">3</span> Connect Repo</a>
+  <span class="nav-arrow">›</span>
+  <a class="nav-step" href="#vscode"><span class="num">4</span> VS Code</a>
+  <span class="nav-arrow">›</span>
+  <a class="nav-step" href="#workflow"><span class="num">5</span> Daily Workflow</a>
+  <span class="nav-arrow">›</span>
+  <a class="nav-step" href="#reference"><span class="num">6</span> Reference</a>
+</nav>
+
+<!-- MAIN -->
+<main class="page">
+
+  <!-- INTRO -->
+  <div class="intro-box">
+    <h2>What This Guide Does</h2>
+    <p>This guide walks you through connecting your local project folder (<span class="inline-code">C:\MyFiles\MattieAI\my-ai-voyage-site</span>) to your GitHub repository (<span class="inline-code">MatthijsKoen/My-AI-Voyage</span>) using Git, and setting up VS Code as your editing environment. After this, every change you make locally can be published to <span class="inline-code">https://matthijskoen.github.io/My-AI-Voyage/</span> with a few clicks or commands.</p>
+    <p>This is a <strong>one-time setup</strong>. Once complete, your daily workflow is just: edit → save → commit → push. That's it.</p>
+  </div>
+
+  <!-- OUTCOMES -->
+  <div class="outcome-grid">
+    <div class="outcome-card">
+      <div class="outcome-icon">🗂️</div>
+      <div class="outcome-title">Version History</div>
+      <p class="outcome-desc">Every change to your blog is tracked. Roll back to any previous version if something breaks.</p>
+    </div>
+    <div class="outcome-card">
+      <div class="outcome-icon">🚀</div>
+      <div class="outcome-title">One-Click Publish</div>
+      <p class="outcome-desc">Push to GitHub and your live site at GitHub Pages updates automatically within minutes.</p>
+    </div>
+    <div class="outcome-card">
+      <div class="outcome-icon">🛠️</div>
+      <div class="outcome-title">Professional Workflow</div>
+      <p class="outcome-desc">Use the same tools as professional developers, right inside VS Code — no terminal needed for daily use.</p>
+    </div>
+  </div>
+
+  <!-- ───── SECTION 1: PREREQUISITES ───── -->
+  <section class="section-wrap" id="prerequisites">
+    <div class="section-label">Step 1</div>
+    <h2 class="section-title">Install the Prerequisites</h2>
+    <p class="section-desc">Before anything else, you need Git and VS Code installed on your Windows machine.</p>
+
+    <!-- Git Install -->
+    <div class="step">
+      <div class="step-num">A</div>
+      <div class="step-body">
+        <div class="step-title">Install Git for Windows</div>
+        <p class="step-text">Download Git from <strong>git-scm.com/download/win</strong> and run the installer. During installation, use these recommended settings:</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-label">Git Installer — Recommended Options</span>
+          </div>
+          <pre><code><span class="comment"># On the "Choosing the default editor" screen:</span>
+<span class="highlight">→ Select "Use Visual Studio Code as Git's default editor"</span>
+
+<span class="comment"># On "Adjusting your PATH environment" screen:</span>
+<span class="highlight">→ Select "Git from the command line and also from 3rd-party software"</span>
+
+<span class="comment"># On "Configuring the line ending conversions" screen:</span>
+<span class="highlight">→ Select "Checkout Windows-style, commit Unix-style line endings"</span>
+
+<span class="comment"># Leave all other options at their defaults and click through</span></code></pre>
+        </div>
+        <p class="step-text">After installation, verify it worked. Open the Windows <strong>Terminal</strong> or <strong>PowerShell</strong> and run:</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-label">PowerShell / Terminal</span>
+          </div>
+          <pre><code><span class="prompt">PS> </span>git --version
+<span class="comment"># Expected output: git version 2.4x.x.windows.1 (or similar)</span></code></pre>
+        </div>
+        <div class="callout tip"><span class="callout-icon"></span><div>If you already have VS Code installed, skip to step B. If not, install VS Code first from <strong>code.visualstudio.com</strong> — it's the free version from Microsoft.</div></div>
+      </div>
+    </div>
+
+    <!-- Verify GitHub PAT -->
+    <div class="step">
+      <div class="step-num">B</div>
+      <div class="step-body">
+        <div class="step-title">Create a GitHub Personal Access Token (PAT)</div>
+        <p class="step-text">GitHub no longer accepts your password for Git operations — you need a Personal Access Token instead. This is a one-time setup.</p>
+        <div class="vscode-panel">
+          <div class="vscode-titlebar">GitHub.com — Settings</div>
+          <div class="vscode-body">
+            <div><span class="vscode-menu">1.</span> Go to <span class="vscode-path">github.com → click your profile picture → Settings</span></div>
+            <div><span class="vscode-menu">2.</span> Scroll to the bottom of the left sidebar → <span class="vscode-action">Developer settings</span></div>
+            <div><span class="vscode-menu">3.</span> Click <span class="vscode-action">Personal access tokens → Tokens (classic)</span></div>
+            <div><span class="vscode-menu">4.</span> Click <span class="vscode-key">Generate new token (classic)</span></div>
+            <div><span class="vscode-menu">5.</span> Note: <span class="vscode-path">"My AI Voyage blog access"</span></div>
+            <div><span class="vscode-menu">6.</span> Expiration: <span class="vscode-path">No expiration</span> (or 1 year)</div>
+            <div><span class="vscode-menu">7.</span> Scopes: check <span class="vscode-key">✓ repo</span> (full repository access)</div>
+            <div><span class="vscode-menu">8.</span> Click <span class="vscode-action">Generate token</span> → <strong style="color:#ffd700">COPY AND SAVE IT NOW</strong> — you won't see it again!</div>
+          </div>
+        </div>
+        <div class="callout warn"><span class="callout-icon"></span><div>Save your token in a secure place (like a password manager). Treat it like a password — never put it in your blog files or share it publicly.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── SECTION 2: GIT CONFIG ───── -->
+  <section class="section-wrap" id="git-setup">
+    <div class="section-label">Step 2</div>
+    <h2 class="section-title">Configure Git on Your Machine</h2>
+    <p class="section-desc">Tell Git who you are — this information appears in your commit history on GitHub.</p>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Set Your Identity</div>
+        <p class="step-text">Open <strong>PowerShell</strong> or the <strong>Windows Terminal</strong> and run these two commands, substituting your own name and the email address linked to your GitHub account:</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-label">PowerShell — Run Once</span></div>
+          <pre><code><span class="prompt">PS> </span>git config --global user.name <span class="highlight">"Matthijs Koen"</span>
+<span class="prompt">PS> </span>git config --global user.email <span class="highlight">"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3c4553494e1259515d55507c59445d514c5059125f5351">[email&#160;protected]</a>"</span>
+
+<span class="comment"># Verify the settings are saved correctly:</span>
+<span class="prompt">PS> </span>git config --global --list</code></pre>
+        </div>
+        <div class="callout info"><span class="callout-icon"></span><div>The <span class="inline-code">--global</span> flag means this applies to all your Git projects on this machine, not just this one. You only need to do this once per computer.</div></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Store Your GitHub Credentials</div>
+        <p class="step-text">Tell Git to remember your credentials so you don't have to enter your token every time you push:</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-label">PowerShell — Run Once</span></div>
+          <pre><code><span class="prompt">PS> </span>git config --global credential.helper manager
+
+<span class="comment"># This uses Windows Credential Manager to securely store your token.
+# The first time you push, Windows will prompt you for credentials —
+# enter your GitHub username and paste your PAT as the password.</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── SECTION 3: CONNECT REPO ───── -->
+  <section class="section-wrap" id="connect">
+    <div class="section-label">Step 3</div>
+    <h2 class="section-title">Connect Your Local Folder to GitHub</h2>
+    <p class="section-desc">Your <span class="inline-code">index.html</span> already exists locally. Now we link that folder to your GitHub repository.</p>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Navigate to Your Project Folder</div>
+        <p class="step-text">Open PowerShell and navigate to your project directory:</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-label">PowerShell</span></div>
+          <pre><code><span class="prompt">PS> </span>cd <span class="highlight">"C:\MyFiles\MattieAI\my-ai-voyage-site"</span>
+
+<span class="comment"># Confirm you're in the right place:</span>
+<span class="prompt">PS> </span>dir
+<span class="comment"># You should see: index.html listed here</span></code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Initialize Git in This Folder</div>
+        <p class="step-text">Turn your project folder into a Git repository:</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-label">PowerShell</span></div>
+          <pre><code><span class="prompt">PS> </span>git init
+
+<span class="comment"># Expected output:</span>
+<span class="comment"># Initialized empty Git repository in C:/MyFiles/MattieAI/my-ai-voyage-site/.git/</span></code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Create a .gitignore File</div>
+        <p class="step-text">A <span class="inline-code">.gitignore</span> file tells Git which files to <em>not</em> track. Create this now to keep your repository clean:</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-label">PowerShell — Create .gitignore</span></div>
+          <pre><code><span class="prompt">PS> </span>New-Item -Name ".gitignore" -ItemType "file"
+<span class="prompt">PS> </span>notepad .gitignore</code></pre>
+        </div>
+        <p class="step-text">In Notepad, paste the following content and save:</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-label">.gitignore — Contents</span></div>
+          <pre><code><span class="comment"># Windows system files</span>
+Thumbs.db
+desktop.ini
+.DS_Store
+
+<span class="comment"># VS Code settings (optional — remove this line if you</span>
+<span class="comment"># want to share your VS Code settings with collaborators)</span>
+.vscode/
+
+<span class="comment"># API keys and secrets — NEVER commit these</span>
+.env
+secrets.txt
+api_keys.txt
+
+<span class="comment"># Node modules if you ever add JavaScript dependencies</span>
+node_modules/
+
+<span class="comment"># Temporary files</span>
+*.tmp
+*.log</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Make Your First Commit</div>
+        <p class="step-text">Stage all your files and create your very first commit — this is the foundation of your repository's history:</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-label">PowerShell</span></div>
+          <pre><code><span class="comment"># Stage ALL files in the folder for tracking</span>
+<span class="prompt">PS> </span>git add .
+
+<span class="comment"># Check what's been staged (optional but recommended)</span>
+<span class="prompt">PS> </span>git status
+
+<span class="comment"># Create your first commit with a message</span>
+<span class="prompt">PS> </span>git commit -m <span class="highlight">"🚀 Initial commit — My AI Voyage blog launch"</span>
+
+<span class="comment"># Rename the default branch to 'main' (GitHub's standard)</span>
+<span class="prompt">PS> </span>git branch -M main</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Link to Your GitHub Repository & Push</div>
+        <p class="step-text">Connect your local repository to GitHub and push your first commit:</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-label">PowerShell</span></div>
+          <pre><code><span class="comment"># Add GitHub as the remote origin</span>
+<span class="prompt">PS> </span>git remote add origin <span class="highlight">https://github.com/MatthijsKoen/My-AI-Voyage.git</span>
+
+<span class="comment"># Verify the remote was added correctly</span>
+<span class="prompt">PS> </span>git remote -v
+<span class="comment"># Expected:</span>
+<span class="comment"># origin  https://github.com/MatthijsKoen/My-AI-Voyage.git (fetch)</span>
+<span class="comment"># origin  https://github.com/MatthijsKoen/My-AI-Voyage.git (push)</span>
+
+<span class="comment"># Push your first commit to GitHub</span>
+<span class="prompt">PS> </span>git push -u origin main
+
+<span class="comment"># Windows will prompt for credentials:</span>
+<span class="comment"># Username: MatthijsKoen</span>
+<span class="comment"># Password: [paste your Personal Access Token here]</span></code></pre>
+        </div>
+        <div class="callout tip"><span class="callout-icon"></span><div>After the first push with <span class="inline-code">-u origin main</span>, future pushes only need <span class="inline-code">git push</span> — the <span class="inline-code">-u</span> flag sets the default upstream once and for all.</div></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <div class="step-title">Verify GitHub Pages is Configured</div>
+        <p class="step-text">Since you've already set up GitHub Pages, verify the deployment source is pointing to the right branch:</p>
+        <div class="vscode-panel">
+          <div class="vscode-titlebar">GitHub.com — Repository Settings</div>
+          <div class="vscode-body">
+            <div><span class="vscode-menu">1.</span> Go to <span class="vscode-path">github.com/MatthijsKoen/My-AI-Voyage</span></div>
+            <div><span class="vscode-menu">2.</span> Click <span class="vscode-action">Settings</span> tab (top of the repository page)</div>
+            <div><span class="vscode-menu">3.</span> Left sidebar → <span class="vscode-action">Pages</span></div>
+            <div><span class="vscode-menu">4.</span> Under "Build and deployment", Source should be: <span class="vscode-key">Deploy from a branch</span></div>
+            <div><span class="vscode-menu">5.</span> Branch should be: <span class="vscode-path">main</span> / <span class="vscode-path">/ (root)</span></div>
+            <div><span class="vscode-menu">6.</span> Your site will be live at: <span class="vscode-key">https://matthijskoen.github.io/My-AI-Voyage/</span></div>
+          </div>
+        </div>
+        <div class="callout info"><span class="callout-icon"></span><div>After each push, GitHub Pages takes 1–3 minutes to deploy. You'll see a green checkmark next to your commit on GitHub when it's live.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── SECTION 4: VS CODE ───── -->
+  <section class="section-wrap" id="vscode">
+    <div class="section-label">Step 4</div>
+    <h2 class="section-title">Set Up Visual Studio Code</h2>
+    <p class="section-desc">VS Code has built-in Git support — you can manage everything through a visual interface without typing commands.</p>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Open Your Project in VS Code</div>
+        <p class="step-text">The fastest way to open your project:</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-label">PowerShell — Open in VS Code</span></div>
+          <pre><code><span class="comment"># While in your project folder:</span>
+<span class="prompt">PS> </span>cd "C:\MyFiles\MattieAI\my-ai-voyage-site"
+<span class="prompt">PS> </span>code .
+
+<span class="comment"># The "." means "open the current folder in VS Code"</span></code></pre>
+        </div>
+        <p class="step-text">Alternatively, in VS Code: <kbd>File</kbd> → <kbd>Open Folder</kbd> → navigate to <span class="inline-code">C:\MyFiles\MattieAI\my-ai-voyage-site</span></p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Install Essential Extensions</div>
+        <p class="step-text">Open the Extensions panel with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd> and install these:</p>
+        <div class="ext-grid">
+          <div class="ext-card">
+            <span class="ext-required">Must Have</span>
+            <div class="ext-name">GitLens — Git supercharged</div>
+            <p class="ext-desc">Visualize code authorship, compare branches, and see the full history of every line. The single most useful Git extension.</p>
+          </div>
+          <div class="ext-card">
+            <span class="ext-required">Must Have</span>
+            <div class="ext-name">GitHub Repositories</div>
+            <p class="ext-desc">Browse and edit your GitHub repos directly inside VS Code without cloning. Handy for quick edits.</p>
+          </div>
+          <div class="ext-card">
+            <span class="ext-required">Recommended</span>
+            <div class="ext-name">Live Preview</div>
+            <p class="ext-desc">See your HTML blog update in real-time inside VS Code as you type — no browser refresh needed.</p>
+          </div>
+          <div class="ext-card">
+            <span class="ext-required">Recommended</span>
+            <div class="ext-name">Prettier — Code formatter</div>
+            <p class="ext-desc">Automatically formats your HTML/CSS/JS to be clean and consistent every time you save.</p>
+          </div>
+          <div class="ext-card">
+            <span class="ext-required">Recommended</span>
+            <div class="ext-name">HTML CSS Support</div>
+            <p class="ext-desc">Autocomplete for CSS class names in your HTML files. Very handy when editing your blog styles.</p>
+          </div>
+          <div class="ext-card">
+            <span class="ext-required">Nice to Have</span>
+            <div class="ext-name">Markdown All in One</div>
+            <p class="ext-desc">If you write blog drafts in Markdown before converting to HTML, this gives you full preview and shortcuts.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Configure VS Code Settings for This Project</div>
+        <p class="step-text">Press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> to open the Command Palette, type <span class="inline-code">Open User Settings (JSON)</span> and add these recommended settings:</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-label">VS Code — settings.json additions</span></div>
+          <pre><code>{
+  <span class="comment">// Auto-save whenever you switch away from a file</span>
+  <span class="highlight">"files.autoSave"</span>: <span class="highlight">"onFocusChange"</span>,
+
+  <span class="comment">// Format HTML automatically on save</span>
+  <span class="highlight">"editor.formatOnSave"</span>: true,
+
+  <span class="comment">// Show Git changes in the file explorer sidebar</span>
+  <span class="highlight">"scm.alwaysShowRepositories"</span>: true,
+
+  <span class="comment">// Enable Git autofetch to stay updated with GitHub</span>
+  <span class="highlight">"git.autofetch"</span>: true,
+
+  <span class="comment">// Confirm before syncing (prevents accidental pushes)</span>
+  <span class="highlight">"git.confirmSync"</span>: false,
+
+  <span class="comment">// Always show the Git status bar</span>
+  <span class="highlight">"git.enableStatusBarSync"</span>: true,
+
+  <span class="comment">// Word wrap for comfortable editing of long HTML lines</span>
+  <span class="highlight">"editor.wordWrap"</span>: <span class="highlight">"on"</span>
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Tour the VS Code Git Panel</div>
+        <p class="step-text">Click the <strong>Source Control icon</strong> in the left sidebar (or press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd>) to access the Git panel. Here's what you'll see:</p>
+        <div class="vscode-panel">
+          <div class="vscode-titlebar">Source Control Panel</div>
+          <div class="vscode-body">
+            <div><span class="vscode-key">SOURCE CONTROL</span> <span style="color:rgba(255,255,255,0.3)">— Top shows your commit message input box</span></div>
+            <div style="padding-left:1rem; margin-top:0.5rem">
+              <div><span class="vscode-action">Changes</span> <span style="color:rgba(255,255,255,0.3)">— Files you've edited since last commit (click + to stage)</span></div>
+              <div><span class="vscode-action">Staged Changes</span> <span style="color:rgba(255,255,255,0.3)">— Files ready to be committed</span></div>
+              <div><span class="vscode-menu">...</span> <span style="color:rgba(255,255,255,0.3)">— Three dots menu: Pull, Push, Fetch, Branch options</span></div>
+            </div>
+            <div style="margin-top:1rem"><span class="vscode-key">Bottom Status Bar:</span></div>
+            <div style="padding-left:1rem">
+              <div><span class="vscode-path">⎇ main</span> <span style="color:rgba(255,255,255,0.3)">— Current branch name (click to switch branches)</span></div>
+              <div><span class="vscode-path">↑1 ↓0</span> <span style="color:rgba(255,255,255,0.3)">— Commits ahead/behind GitHub (click to Sync)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── SECTION 5: WORKFLOW ───── -->
+  <section class="section-wrap" id="workflow">
+    <div class="section-label">Step 5</div>
+    <h2 class="section-title">Your Daily Workflow</h2>
+    <p class="section-desc">This is the repeating rhythm you'll follow every time you update your blog. Master this and version control becomes second nature.</p>
+
+    <!-- The flow diagram -->
+    <div class="workflow-diagram">
+      <div style="font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:1rem;">THE PUBLISH LOOP</div>
+
+      <div class="flow-row">
+        <div class="flow-box local">Your Local Files</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box staged">git add .</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:var(--slate)">git commit -m "msg"</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box github">git push → GitHub</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:#2d6a4f">✓ Live Site</div>
+      </div>
+    </div>
+
+    <!-- Terminal workflow -->
+    <div class="step">
+      <div class="step-num">▶</div>
+      <div class="step-body">
+        <div class="step-title">Option A: Using the Terminal (Command Line)</div>
+        <p class="step-text">The complete workflow each time you publish a blog update:</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-label">PowerShell — Your publish routine</span></div>
+          <pre><code><span class="comment"># 1. Check what changed</span>
+<span class="prompt">PS> </span>git status
+
+<span class="comment"># 2. Stage all your changes</span>
+<span class="prompt">PS> </span>git add .
+<span class="comment">#    OR stage a specific file only:</span>
+<span class="prompt">PS> </span>git add index.html
+
+<span class="comment"># 3. Commit with a descriptive message</span>
+<span class="prompt">PS> </span>git commit -m <span class="highlight">"Add Post 1: First API experiment with Claude"</span>
+
+<span class="comment"># 4. Push to GitHub (site goes live in ~2 minutes)</span>
+<span class="prompt">PS> </span>git push
+
+<span class="comment"># 5. Check your live site:</span>
+<span class="comment">#    https://matthijskoen.github.io/My-AI-Voyage/</span></code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- VS Code workflow -->
+    <div class="step">
+      <div class="step-num">▶</div>
+      <div class="step-body">
+        <div class="step-title">Option B: Using VS Code GUI (No Terminal Needed)</div>
+        <p class="step-text">For a fully visual workflow inside VS Code:</p>
+        <div class="vscode-panel">
+          <div class="vscode-titlebar">VS Code — Publish Workflow</div>
+          <div class="vscode-body">
+            <div><span class="vscode-key">1.</span> Edit your <span class="vscode-path">index.html</span> in the editor</div>
+            <div><span class="vscode-key">2.</span> Press <span class="vscode-path">Ctrl+Shift+G</span> to open Source Control panel</div>
+            <div><span class="vscode-key">3.</span> Under "Changes", click the <span class="vscode-action">+ (Stage All Changes)</span> button</div>
+            <div><span class="vscode-key">4.</span> Type your commit message in the box at the top</div>
+            <div><span class="vscode-key">5.</span> Press <span class="vscode-action">Ctrl+Enter</span> to commit</div>
+            <div><span class="vscode-key">6.</span> Click the <span class="vscode-action">↑ Sync Changes</span> button in the status bar</div>
+            <div><span class="vscode-key">7.</span> Done! GitHub Pages will update in ~2 minutes ✓</div>
+          </div>
+        </div>
+        <div class="callout tip"><span class="callout-icon"></span><div>"Sync Changes" in VS Code does a <span class="inline-code">git pull</span> followed by <span class="inline-code">git push</span> in one click — it's the safest way to keep in sync with GitHub.</div></div>
+      </div>
+    </div>
+
+    <!-- Writing good commit messages -->
+    <div class="step">
+      <div class="step-num">▶</div>
+      <div class="step-body">
+        <div class="step-title">Writing Good Commit Messages</div>
+        <p class="step-text">Your commit history is your blog's changelog. Use short, descriptive messages that explain <em>what</em> changed and <em>why</em>:</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-label">Good vs. Bad Commit Messages</span></div>
+          <pre><code><span class="comment"># ❌ Bad — tells you nothing useful</span>
+git commit -m "update"
+git commit -m "fix stuff"
+git commit -m "changes"
+
+<span class="comment"># ✅ Good — clear and descriptive</span>
+git commit -m <span class="highlight">"Publish Post 1: Claude API earnings summary experiment"</span>
+git commit -m <span class="highlight">"Fix mobile layout — nav menu overflowing on small screens"</span>
+git commit -m <span class="highlight">"Add Post 2 draft: tools comparison article"</span>
+git commit -m <span class="highlight">"Update About page with LinkedIn link"</span>
+git commit -m <span class="highlight">"Add Post 3 teaser to homepage grid"</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── SECTION 6: YOUR FILE STRUCTURE ───── -->
+  <section class="section-wrap">
+    <div class="section-label">Bonus</div>
+    <h2 class="section-title">Recommended File Structure for Your Blog</h2>
+    <p class="section-desc">As your blog grows, keep things organised from the start. Here's a structure that scales well:</p>
+
+    <div class="file-tree">
+      <div><span class="tree-folder">My-AI-Journey/</span>  <span class="tree-desc">← Your GitHub repository root</span></div>
+      <div>│</div>
+      <div>├── <span class="tree-special">index.html</span>  <span class="tree-desc">← Your homepage (already done!)</span></div>
+      <div>├── <span class="tree-special">.gitignore</span>  <span class="tree-desc">← Keeps unwanted files out of Git</span></div>
+      <div>├── <span class="tree-special">README.md</span>  <span class="tree-desc">← Shown on your GitHub repo page</span></div>
+      <div>│</div>
+      <div>├── <span class="tree-folder">posts/</span>  <span class="tree-desc">← Each blog post gets its own HTML file</span></div>
+      <div>│   ├── <span class="tree-file">post-01-first-api-call.html</span></div>
+      <div>│   ├── <span class="tree-file">post-02-tools-comparison.html</span></div>
+      <div>│   └── <span class="tree-file">post-03-reading-10k.html</span></div>
+      <div>│</div>
+      <div>├── <span class="tree-folder">assets/</span>  <span class="tree-desc">← Static assets</span></div>
+      <div>│   ├── <span class="tree-folder">css/</span>  <span class="tree-desc">← Shared stylesheets (when you extract CSS)</span></div>
+      <div>│   ├── <span class="tree-folder">images/</span>  <span class="tree-desc">← Screenshots, diagrams for posts</span></div>
+      <div>│   └── <span class="tree-folder">experiments/</span>  <span class="tree-desc">← Code snippets you share with readers</span></div>
+      <div>│</div>
+      <div>└── <span class="tree-folder">drafts/</span>  <span class="tree-desc">← Work-in-progress (add to .gitignore!)</span></div>
+    </div>
+
+    <div class="callout tip"><span class="callout-icon"></span><div>Add <span class="inline-code">drafts/</span> to your <span class="inline-code">.gitignore</span> if you don't want in-progress posts visible on GitHub. Or keep them visible — it adds to the transparency of your public voyage!</div></div>
+  </section>
+
+  <!-- ───── SECTION 7: COMMAND REFERENCE ───── -->
+  <section class="section-wrap" id="reference">
+    <div class="section-label">Step 6</div>
+    <h2 class="section-title">Quick Reference Cheat Sheet</h2>
+    <p class="section-desc">The 10 Git commands you'll use 90% of the time.</p>
+
+    <table class="cmd-table">
+      <thead>
+        <tr>
+          <th>Command</th>
+          <th>What It Does</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>git status</td>
+          <td>Show which files have changed since the last commit</td>
+        </tr>
+        <tr>
+          <td>git add .</td>
+          <td>Stage ALL changed files, ready to commit</td>
+        </tr>
+        <tr>
+          <td>git add filename.html</td>
+          <td>Stage one specific file only</td>
+        </tr>
+        <tr>
+          <td>git commit -m "message"</td>
+          <td>Save a snapshot of staged files with a description</td>
+        </tr>
+        <tr>
+          <td>git push</td>
+          <td>Upload your commits to GitHub (publishes the site)</td>
+        </tr>
+        <tr>
+          <td>git pull</td>
+          <td>Download any changes from GitHub to your local copy</td>
+        </tr>
+        <tr>
+          <td>git log --oneline</td>
+          <td>See a compact list of all past commits</td>
+        </tr>
+        <tr>
+          <td>git diff</td>
+          <td>Show exactly what lines changed in unstaged files</td>
+        </tr>
+        <tr>
+          <td>git restore filename.html</td>
+          <td>Discard changes to a file — undo back to last commit</td>
+        </tr>
+        <tr>
+          <td>git log --oneline -10</td>
+          <td>Show last 10 commits in compact format</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Final checklist -->
+    <div style="margin-top:2.5rem; background: var(--white); padding: 2rem; border-left: 4px solid var(--success);">
+      <div style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; margin-bottom:1rem;">✅ Setup Completion Checklist</div>
+      <ul class="checklist">
+        <li><span class="check-box"></span> Git installed and version confirmed in PowerShell</li>
+        <li><span class="check-box"></span> GitHub Personal Access Token created and saved securely</li>
+        <li><span class="check-box"></span> Git identity configured (<span class="inline-code">user.name</span> and <span class="inline-code">user.email</span>)</li>
+        <li><span class="check-box"></span> Credential helper set to Windows Credential Manager</li>
+        <li><span class="check-box"></span> <span class="inline-code">.gitignore</span> file created in project folder</li>
+        <li><span class="check-box"></span> <span class="inline-code">git init</span> run in project folder</li>
+        <li><span class="check-box"></span> First commit made with <span class="inline-code">index.html</span></li>
+        <li><span class="check-box"></span> Remote origin linked to <span class="inline-code">github.com/MatthijsKoen/My-AI-Voyage</span></li>
+        <li><span class="check-box"></span> First push successful — code visible on GitHub</li>
+        <li><span class="check-box"></span> GitHub Pages configured to deploy from <span class="inline-code">main</span> branch</li>
+        <li><span class="check-box"></span> VS Code opened with project folder</li>
+        <li><span class="check-box"></span> GitLens and Live Preview extensions installed</li>
+        <li><span class="check-box"></span> Test edit → commit → push → verified live on site</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="guide-footer">
+    <div class="guide-footer-brand">My AI Voyage</div>
+    <div class="guide-footer-mono">Git + VS Code Setup Guide · matthijskoen.github.i

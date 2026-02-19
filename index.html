@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My AI Voyage — To Boldly Go Where AI Can Bring Me</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Literata:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --cream: #f5f1ea;
+      --gold: #c9a84c;
+      --gold-light: #e8d5a3;
+      --slate: #2c3e50;
+      --muted: #7a7065;
+      --rule: #d4cfc5;
+      --accent: #1a3a5c;
+      --white: #fdfcf9;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: 'Literata', Georgia, serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── ANIMATED BACKGROUND ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 20%, rgba(201,168,76,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 10% 80%, rgba(26,58,92,0.06) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── NOISE TEXTURE OVERLAY ─── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* ─── MASTHEAD ─── */
+    .masthead {
+      position: relative;
+      z-index: 10;
+      border-bottom: 1px solid var(--rule);
+      padding: 0 clamp(1.5rem, 5vw, 5rem);
+      background: var(--white);
+    }
+
+    .masthead-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--rule);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .masthead-date { opacity: 0.7; }
+
+    .masthead-tag {
+      background: var(--accent);
+      color: var(--gold-light);
+      padding: 0.2em 0.8em;
+      border-radius: 2px;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+    }
+
+    .masthead-center {
+      padding: 2.5rem 0 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.5rem;
+    }
+
+    .ornament {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--gold);
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .ornament-line {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+
+    .ornament-line.right {
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    .masthead-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      animation: fadeDown 0.8s ease both;
+    }
+
+    .masthead-title .em { font-style: italic; color: var(--accent); }
+
+    .masthead-subtitle {
+      font-family: 'Literata', serif;
+      font-style: italic;
+      font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+      color: var(--muted);
+      font-weight: 300;
+      max-width: 680px;
+      animation: fadeDown 0.8s 0.15s ease both;
+    }
+
+    .masthead-nav {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      padding: 1rem 0;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-top: 1px solid var(--rule);
+    }
+
+    .masthead-nav a {
+      color: var(--ink);
+      text-decoration: none;
+      opacity: 0.6;
+      transition: opacity 0.2s, color 0.2s;
+      position: relative;
+    }
+
+    .masthead-nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    .masthead-nav a:hover { opacity: 1; color: var(--accent); }
+    .masthead-nav a:hover::after { width: 100%; }
+
+    /* ─── LAYOUT ─── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 5vw, 5rem);
+    }
+
+    /* ─── HERO FEATURE ─── */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 3rem;
+      padding: 4rem 0 3rem;
+      border-bottom: 1px solid var(--rule);
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hero-label::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .hero-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3.5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-headline em { font-style: italic; color: var(--accent); }
+
+    .hero-body {
+      font-size: 1.05rem;
+      color: #3a3530;
+      max-width: 600px;
+      margin-bottom: 2rem;
+      line-height: 1.8;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: var(--accent);
+      padding: 0.85em 1.8em;
+      text-decoration: none;
+      transition: background 0.25s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .hero-cta:hover::before { transform: scaleX(1); }
+    .hero-cta span { position: relative; z-index: 1; }
+
+    .hero-sidebar {
+      border-left: 1px solid var(--rule);
+      padding-left: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .sidebar-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    /* ─── VOYAGE STATS ─── */
+    .stat-stack { display: flex; flex-direction: column; gap: 1rem; }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .stat-item:last-child { border-bottom: none; }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .stat-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* ─── MISSION STRIP ─── */
+    .mission-strip {
+      background: var(--accent);
+      color: var(--cream);
+      padding: 3rem clamp(1.5rem, 5vw, 5rem);
+      margin: 0 calc(-1 * clamp(1.5rem, 5vw, 5rem));
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mission-strip::before {
+      content: '⊹';
+      position: absolute;
+      right: 4rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12rem;
+      opacity: 0.05;
+      font-family: 'Playfair Display', serif;
+      pointer-events: none;
+    }
+
+    .mission-pillar {}
+
+    .pillar-icon {
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .pillar-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 0.6rem;
+    }
+
+    .pillar-body {
+      font-size: 0.88rem;
+      color: rgba(245,241,234,0.75);
+      line-height: 1.7;
+      font-style: italic;
+    }
+
+    /* ─── ARTICLES GRID ─── */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 3rem 0 1.5rem;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .section-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .section-link:hover { opacity: 1; color: var(--accent); }
+
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-bottom: 3rem;
+    }
+
+    .article-card {
+      background: var(--white);
+      padding: 2rem;
+      position: relative;
+      transition: background 0.25s;
+      cursor: pointer;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .article-card:nth-child(2) { animation-delay: 0.1s; }
+    .article-card:nth-child(3) { animation-delay: 0.2s; }
+    .article-card:nth-child(4) { animation-delay: 0.3s; }
+    .article-card:nth-child(5) { animation-delay: 0.4s; }
+    .article-card:nth-child(6) { animation-delay: 0.5s; }
+
+    .article-card:hover { background: #f0ece3; }
+
+    .card-series {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.2em 0.6em;
+      border-radius: 2px;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    .series-build { background: rgba(26,58,92,0.1); color: var(--accent); }
+    .series-tools { background: rgba(201,168,76,0.15); color: #7a5a1a; }
+    .series-research { background: rgba(44,62,80,0.1); color: var(--slate); }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 0.8rem;
+      color: var(--ink);
+    }
+
+    .card-excerpt {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      opacity: 0.7;
+    }
+
+    .card-meta-dot { opacity: 0.4; }
+
+    /* ─── ROADMAP ─── */
+    .roadmap {
+      background: var(--white);
+      padding: 3rem;
+      margin-bottom: 3rem;
+      border-left: 4px solid var(--gold);
+    }
+
+    .roadmap-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .roadmap-subtitle {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+
+    .roadmap-phases {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .phase {
+      position: relative;
+      padding-left: 1.5rem;
+      border-left: 2px solid var(--rule);
+    }
+
+    .phase.active { border-left-color: var(--gold); }
+
+    .phase-number {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .phase.active .phase-number { color: var(--gold); }
+
+    .phase-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .phase-items {
+      list-style: none;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .phase-items li::before {
+      content: '→ ';
+      color: var(--gold);
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* ─── LINKEDIN STRIP ─── */
+    .linkedin-strip {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 3rem;
+      align-items: center;
+      padding: 3rem;
+      background: #0a66c2;
+      color: white;
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .linkedin-strip::before {
+      content: 'in';
+      position: absolute;
+      right: 2rem;
+      font-size: 12rem;
+      font-weight: 900;
+      opacity: 0.07;
+      font-family: 'Playfair Display', serif;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .li-header {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1.25;
+      position: relative;
+    }
+
+    .li-post {
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .li-post-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 0.8rem;
+    }
+
+    .li-post-text {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.9);
+      font-style: italic;
+    }
+
+    /* ─── TOOLKIT ─── */
+    .toolkit-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      margin-bottom: 3rem;
+    }
+
+    .tool-card {
+      background: var(--white);
+      padding: 1.5rem;
+      text-align: center;
+      transition: background 0.2s;
+    }
+
+    .tool-card:hover { background: var(--accent); }
+    .tool-card:hover .tool-name { color: var(--gold-light); }
+    .tool-card:hover .tool-desc { color: rgba(245,241,234,0.7); }
+
+    .tool-icon { font-size: 1.8rem; margin-bottom: 0.7rem; }
+
+    .tool-name {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+      transition: color 0.2s;
+    }
+
+    .tool-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.5;
+      transition: color 0.2s;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 2px solid var(--ink);
+      padding: 2.5rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+
+    .footer-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .footer-mono {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── TICKER ─── */
+    .ticker-wrap {
+      overflow: hidden;
+      background: var(--ink);
+      padding: 0.6rem 0;
+      position: relative;
+    }
+
+    .ticker {
+      display: flex;
+      gap: 4rem;
+      animation: ticker 28s linear infinite;
+      white-space: nowrap;
+      width: max-content;
+    }
+
+    .ticker-item {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .ticker-item .dot {
+      width: 4px;
+      height: 4px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0.5;
+    }
+
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-sidebar { border-left: none; border-top: 1px solid var(--rule); padding-left: 0; padding-top: 2rem; }
+      .articles-grid { grid-template-columns: 1fr 1fr; }
+      .roadmap-phases { grid-template-columns: 1fr; }
+      .mission-strip { grid-template-columns: 1fr; }
+      .toolkit-grid { grid-template-columns: 1fr 1fr; }
+      .linkedin-strip { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .articles-grid { grid-template-columns: 1fr; }
+      .toolkit-grid { grid-template-columns: 1fr 1fr; }
+      .masthead-nav { gap: 1.2rem; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item"><span class="dot"></span> Citizen Developer in Investment AI</span>
+    <span class="ticker-item"><span class="dot"></span> Exploring Claude API for Portfolio Analysis</span>
+    <span class="ticker-item"><span class="dot"></span> Building Practical AI Tools for Asset Management</span>
+    <span class="ticker-item"><span class="dot"></span> No CS Degree Required</span>
+    <span class="ticker-item"><span class="dot"></span> AI + Investment Research = The Future</span>
+    <span class="ticker-item"><span class="dot"></span> Citizen Developer in Investment AI</span>
+    <span class="ticker-item"><span class="dot"></span> Exploring Claude API for Portfolio Analysis</span>
+    <span class="ticker-item"><span class="dot"></span> Building Practical AI Tools for Asset Management</span>
+    <span class="ticker-item"><span class="dot"></span> No CS Degree Required</span>
+    <span class="ticker-item"><span class="dot"></span> AI + Investment Research = The Future</span>
+  </div>
+</div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-top">
+    <span class="masthead-date">Est. February 2026 · Volume I, Issue I</span>
+    <span class="masthead-tag">Citizen Developer Series</span>
+    <span>Investment Management × Artificial Intelligence</span>
+  </div>
+  <div class="masthead-center">
+    <div class="ornament">
+      <span class="ornament-line"></span>
+      ✦
+      <span class="ornament-line right"></span>
+    </div>
+    <h1 class="masthead-title">My <em>AI</em> Voyage</h1>
+    <p class="masthead-subtitle">How a Citizen Developer Explores the Possibilities of AI in Investment Management,</p>
+    <p class="masthead-subtitle">Aiming to Build and Document Practical Applications; To Boldly Go where AI Can Bring Him.</p>
+  </div>
+  <nav class="masthead-nav">
+    <a href="#">Start Here</a>
+    <a href="#">Builds & Experiments</a>
+    <a href="#">AI Tools Reviewed</a>
+    <a href="#">Research Lab</a>
+    <a href="#">LinkedIn Posts</a>
+    <a href="#">About</a>
+  </nav>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="page">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-main">
+      <div class="hero-label">Inaugural Post · The Beginning</div>
+      <h2 class="hero-headline">Why I'm Teaching Myself to <em>Build with AI</em> — and Documenting Every Step</h2>
+      <p class="hero-body">
+        I'm not a developer. I'm not an AI researcher. I'm an investment management professional who believes that the intersection of artificial intelligence and finance is the most important frontier of the next decade — and I decided to explore it myself, in public, one experiment at a time.
+      </p>
+      <p class="hero-body">
+        This blog is my laboratory notebook. Each post is a real experiment: a tool tested, an API called, a research paper digested, a workflow built. No hype. Just honest documentation of what works, what fails, and what surprises me.
+      </p>
+      <a href="#" class="hero-cta"><span>Read the Origin Story →</span></a>
+    </div>
+    <div class="hero-sidebar">
+      <div class="sidebar-label">Voyage Metrics</div>
+      <div class="stat-stack">
+        <div class="stat-item">
+          <span class="stat-number">1</span>
+          <span class="stat-desc">Experiments published</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">3</span>
+          <span class="stat-desc">APIs explored so far</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">0</span>
+          <span class="stat-desc">Computer science degrees held</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">∞</span>
+          <span class="stat-desc">Curiosity remaining</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION STRIP -->
+  <div class="mission-strip">
+    <div class="mission-pillar">
+      <div class="pillar-icon">⚗️</div>
+      <div class="pillar-title">Build & Experiment</div>
+      <p class="pillar-body">Hands-on API experiments, mini tools, and prototypes built in public. If it touches investment data, I'll try to make AI work with it.</p>
+    </div>
+    <div class="mission-pillar">
+      <div class="pillar-icon">📡</div>
+      <div class="pillar-title">Research & Synthesize</div>
+      <p class="pillar-body">Using AI to consume, summarize, and extract signal from the flood of investment research, earnings calls, and market commentary.</p>
+    </div>
+    <div class="mission-pillar">
+      <div class="pillar-icon">📢</div>
+      <div class="pillar-title">Document & Share</div>
+      <p class="pillar-body">Every experiment documented here. Key insights distilled for LinkedIn. The goal: build a community of fellow curious practitioners.</p>
+    </div>
+  </div>
+
+  <!-- POSTS SECTION -->
+  <div class="section-header">
+    <span class="section-title">Latest Experiments & Posts</span>
+    <a href="#" class="section-link">View All →</a>
+  </div>
+
+  <div class="articles-grid">
+    <article class="article-card">
+      <span class="card-series series-build">Citizen Dev Build</span>
+      <h3 class="card-title">My First API Call: Asking Claude to Summarize an Earnings Release</h3>
+      <p class="card-excerpt">I sent a raw 10-K earnings release to the Claude API and asked it to extract the five most important signals for equity investors. Here's exactly what happened.</p>
+      <div class="card-meta">
+        <span>Coming Soon</span>
+        <span class="card-meta-dot">·</span>
+        <span>6 min read</span>
+      </div>
+    </article>
+    <article class="article-card">
+      <span class="card-series series-tools">AI Tools Review</span>
+      <h3 class="card-title">Perplexity vs. Claude vs. ChatGPT: Who's Best for Investment Research?</h3>
+      <p class="card-excerpt">I ran the same investment research prompts through three leading AI tools and scored them on accuracy, depth, and citation quality. The results surprised me.</p>
+      <div class="card-meta">
+        <span>Coming Soon</span>
+        <span class="card-meta-dot">·</span>
+        <span>9 min read</span>
+      </div>
+    </article>
+    <article class="article-card">
+      <span class="card-series series-research">Research Radar</span>
+      <h3 class="card-title">Can AI Read a 10-K Better Than I Can? An Honest Test</h3>
+      <p class="card-excerpt">Armed with a 200-page annual report and a well-crafted prompt, I asked Claude to do what analysts do: find the risks buried in the footnotes.</p>
+      <div class="card-meta">
+        <span>Coming Soon</span>
+        <span class="card-meta-dot">·</span>
+        <span>8 min read</span>
+      </div>
+    </article>
+    <article class="article-card">
+      <span class="card-series series-build">Citizen Dev Build</span>
+      <h3 class="card-title">I Built a Daily Portfolio News Digest Using AI — For Free</h3>
+      <p class="card-excerpt">A step-by-step walkthrough of how I connected an API to pull market news, summarize it with AI, and deliver a daily brief to my inbox — no code experience needed.</p>
+      <div class="card-meta">
+        <span>Coming Soon</span>
+        <span class="card-meta-dot">·</span>
+        <span>12 min read</span>
+      </div>
+    </article>
+    <article class="article-card">
+      <span class="card-series series-research">Research Radar</span>
+      <h3 class="card-title">Using AI to Decode Central Bank Language: A Fed Minutes Experiment</h3>
+      <p class="card-excerpt">Fed minutes are deliberately opaque. I tested whether AI could translate the 2024 minutes into plain English and extract actionable rate expectations.</p>
+      <div class="card-meta">
+        <span>Coming Soon</span>
+        <span class="card-meta-dot">·</span>
+        <span>7 min read</span>
+      </div>
+    </article>
+    <article class="article-card">
+      <span class="card-series series-tools">AI Tools Review</span>
+      <h3 class="card-title">My AI Toolkit for Investment Management: A Citizen Dev's Starter Pack</h3>
+      <p class="card-excerpt">After 90 days of experimenting, here's everything I'd recommend to an investment professional who wants to start using AI today — with honest assessments of each.</p>
+      <div class="card-meta">
+        <span>Coming Soon</span>
+        <span class="card-meta-dot">·</span>
+        <span>10 min read</span>
+      </div>
+    </article>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="roadmap">
+    <h2 class="roadmap-title">The Voyage Ahead: A Public Roadmap</h2>
+    <p class="roadmap-subtitle">I'm publishing this roadmap so you can follow along — and hold me accountable.</p>
+    <div class="roadmap-phases">
+      <div class="phase active">
+        <div class="phase-number">Phase 01 · Now</div>
+        <div class="phase-title">Foundation & First Experiments</div>
+        <ul class="phase-items">
+          <li>Set up API access (Claude, OpenAI)</li>
+          <li>First earnings call summarizer</li>
+          <li>Launch blog & LinkedIn series</li>
+          <li>Tools comparison review</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="phase-number">Phase 02 · Months 2–4</div>
+        <div class="phase-title">Building Real Workflows</div>
+        <ul class="phase-items">
+          <li>Automated research digest</li>
+          <li>Portfolio news monitor</li>
+          <li>Sentiment analysis on filings</li>
+          <li>AI prompt library for analysts</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="phase-number">Phase 03 · Months 5+</div>
+        <div class="phase-title">Advanced Applications</div>
+        <ul class="phase-items">
+          <li>Multi-document analysis tool</li>
+          <li>Risk factor extraction pipeline</li>
+          <li>AI-assisted ESG screening</li>
+          <li>Open-source toolkit release</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- LINKEDIN STRIP -->
+  <div class="linkedin-strip">
+    <div class="li-header">Follow the Voyage on LinkedIn</div>
+    <div class="li-post">
+      <div class="li-post-label">Sample Post · Coming Soon</div>
+      <p class="li-post-text">"🧪 Experiment #1 complete. I asked an AI to summarize a 40-page earnings release into 5 bullet points for an equity investor. The result? Genuinely impressive — with one notable hallucination I almost missed. Full breakdown on the blog. What should I test next? 👇"</p>
+    </div>
+  </div>
+
+  <!-- TOOLKIT -->
+  <div class="section-header">
+    <span class="section-title">The Starting Toolkit</span>
+    <a href="#" class="section-link">Full Reviews →</a>
+  </div>
+
+  <div class="toolkit-grid">
+    <div class="tool-card">
+      <div class="tool-icon">🧠</div>
+      <div class="tool-name">Claude API</div>
+      <p class="tool-desc">Long documents, nuanced analysis, reasoning. My primary AI engine.</p>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🔍</div>
+      <div class="tool-name">Perplexity AI</div>
+      <p class="tool-desc">Real-time web research with citations. Great for market news synthesis.</p>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">⚡</div>
+      <div class="tool-name">Replit / Colab</div>
+      <p class="tool-desc">Zero-install coding environments. Run my experiments in the browser.</p>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🔗</div>
+      <div class="tool-name">Zapier / Make</div>
+      <p class="tool-desc">Connect APIs without code. Automate the boring parts of data gathering.</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">My AI Voyage</div>
+    <div class="footer-mono">A Citizen Developer Experiment · Investment Management × AI · Est. 2026</div>
+    <div class="footer-mono">All experiments documented honestly</div>
+  </footer>
+
+</main>
+
+</body>
+</html>
